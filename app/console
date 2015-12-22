@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/../bootstrap.php';
+
+use Symfony\Component\Console\Application;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+
+$helperSet = ConsoleRunner::createHelperSet($entityManager);
+$list = opendir(__DIR__.'/../src/Chalasdev/Console/Command');
+
+$app = new Application('chalasdev/doctrine-cli', '1.1.0');
+$app->setHelperSet($helperSet);
+ConsoleRunner::addCommands($app);
+while (false !== ($filename = readdir($list))) {
+    if (!in_array($filename, ['.', '..'])) {
+        if (strpos($filename, 'Command.php') !== false) {
+            $className = explode('.php', $filename);
+            $classes[] = $className[0];
+        }
+    }
+}
+foreach ($classes as $command) {
+    $command = "Chalasdev\Console\Command\\".$command;
+    $command = new $command();
+    $app->add($command);
+}
+$app->run();

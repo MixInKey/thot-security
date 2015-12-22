@@ -1,0 +1,7 @@
+# Parameters for doctrine connection
+parameters:
+    host: 127.0.0.1
+    database: orm-test
+    user: root
+    password: root
+    # add driver configuration for sqlite / other.
